@@ -7,10 +7,11 @@ class Game:
         self.moves = [None, None]
         self.wins = [0,0]
         self.ties = 0
-
+        self.names =["Anônimo","Anônimo"]
     def get_player_move(self, p):
         return self.moves[p]
-
+    def saveName(self,player,name):
+        self.names[player] = name
     def play(self, player, move):
         self.moves[player] = move
         if player == 0:

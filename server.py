@@ -13,7 +13,7 @@ try:
 except socket.error as e:
     str(e)
 s.listen(0)
-print("Waiting for a connection, Server Started")
+print("Servidor Iniciado, aguardando conexão...")
 
 connected = set()
 games = {}
@@ -35,21 +35,31 @@ def threaded_client(conn, p, gameId):
                 if not data:
                     break
                 else:
-                    if data == "reset":
-                        game.resetWent()
-                    elif data != "get":
-                        game.play(p, data)
+                    if "*" in data:
+                        index = str(data).split("*")
+                        if index[1] == '1':
+                            game.wins[int(index[1])] = int(index[0])
 
+                        elif index[1] == '0':
+                            game.wins[int(index[0])] = int(index[0])
+                        print("jogador" + index[1] + ":" + index[0])
+                    elif "/" in str(data):
+                        name = str(data).strip('/')
+                        game.names[p] = name
+                    elif data == "reset":
+                        game.resetWent()
+                    elif data != "get" and '/' not in str(data) and '*' not in str(data):
+                        game.play(p, data)
                     conn.sendall(pickle.dumps(game))
             else:
                 break
         except:
             break
 
-    print("Lost connection")
+    print("Conexão Perdida")
     try:
         del games[gameId]
-        print("Closing Game", gameId)
+        print("Fechando Jogo", gameId)
     except:
         pass
     idCount -= 1
@@ -59,14 +69,14 @@ def threaded_client(conn, p, gameId):
 
 while True:
     conn, addr = s.accept()
-    print("Connected to:", addr)
+    print("Conectado a:", addr)
 
     idCount += 1
     p = 0
     gameId = (idCount - 1)//2
     if idCount % 2 == 1:
         games[gameId] = Game(gameId)
-        print("Creating a new game...")
+        print("Criando novo jogo...")
     else:
         games[gameId].ready = True
         p = 1
