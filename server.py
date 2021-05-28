@@ -35,20 +35,13 @@ def threaded_client(conn, p, gameId):
                 if not data:
                     break
                 else:
-                    if "*" in data:
-                        index = str(data).split("*")
-                        if index[1] == '1':
-                            game.wins[int(index[1])] = int(index[0])
 
-                        elif index[1] == '0':
-                            game.wins[int(index[0])] = int(index[0])
-                        print("jogador" + index[1] + ":" + index[0])
-                    elif "/" in str(data):
+                    if "/" in str(data):
                         name = str(data).strip('/')
                         game.names[p] = name
                     elif data == "reset":
                         game.resetWent()
-                    elif data != "get" and '/' not in str(data) and '*' not in str(data):
+                    elif data != "get" and '/' not in str(data):
                         game.play(p, data)
                     conn.sendall(pickle.dumps(game))
             else:

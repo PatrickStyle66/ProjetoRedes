@@ -86,7 +86,6 @@ def redrawWindow(win, game, p):
         win.blit(text, (width/2 - text.get_width()/2, height/2 - text.get_height()/2))
     else:
         font = pygame.font.SysFont("comicsans", 50)
-        scorefont = pygame.font.SysFont("comicsans", 30)
         text = font.render("Sua jogada", 1, (0, 255,255))
         win.blit(text, (60, 200))
 
@@ -97,8 +96,6 @@ def redrawWindow(win, game, p):
         move2 = game.get_player_move(1)
         name1 = font.render(game.names[0], 1, (0, 0, 0))
         name2 = font.render(game.names[1], 1, (0, 0, 0))
-        score1 = scorefont.render("Vitórias:" + str(game.wins[0]), 1, (0, 0, 0))
-        score2 = scorefont.render("Vitórias:" + str(game.wins[1]), 1, (0, 0, 0))
 
         if game.bothWent():
             text1 = font.render(move1, 1, (0,0,0))
@@ -123,15 +120,11 @@ def redrawWindow(win, game, p):
             win.blit(text1, (390, 350))
             win.blit(name2,(60,50))
             win.blit(name1,(390,50))
-            win.blit(score2,(60,80))
-            win.blit(score1, (390, 80))
         else:
             win.blit(text1, (60, 350))
             win.blit(text2, (390, 350))
             win.blit(name1, (60, 50))
             win.blit(name2, (390, 50))
-            win.blit(score1, (60, 80))
-            win.blit(score2, (390, 80))
         for btn in btns:
             btn.draw(win,False)
 
@@ -172,8 +165,6 @@ def main():
             font = pygame.font.Font('Qabil.otf', 90)
             if (game.winner() == 1 and player == 1) or (game.winner() == 0 and player == 0):
                 text = font.render("Ganhou!", 1, (0,255,0))
-                game.wins[game.winner()] += 1
-                game = n.send(str(game.wins[game.winner()]) + '*' + str(game.winner()))
             elif game.winner() == -1:
                 text = font.render("Empate!", 1, (255,255,255))
             else:
@@ -229,6 +220,8 @@ def menu_screen():
                     run = False
                     if textinput.text != '':
                         playerName = textinput.text
+                    else:
+                        playerName = 'Anônimo'
             textinput.handle_event(event)
         textinput.update()
         textinput.draw(win)
